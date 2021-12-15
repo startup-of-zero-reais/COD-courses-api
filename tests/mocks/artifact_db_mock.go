@@ -65,7 +65,7 @@ func (f *FakeArtifactDb) Connect() {
 	f.Db = db
 }
 
-func (f *FakeArtifactDb) Create(entity interface{}) interface{} {
+func (f *FakeArtifactDb) Create(entity interface{}, result domain.Result) {
 	artifact := entity.(domain.Artifact)
 
 	f.Connect()
@@ -84,23 +84,20 @@ func (f *FakeArtifactDb) Create(entity interface{}) interface{} {
 	}
 
 	stmt, _ = f.Db.Prepare("SELECT * FROM artifacts WHERE lesson_id = ? AND link = ?")
-	var result domain.Artifact
+	var modelResult domain.Artifact
 	_ = stmt.QueryRow(artifact.LessonID, artifact.Link).Scan(
-		&result.ArtifactID, &result.LessonID, &result.Link,
+		&modelResult.ArtifactID, &modelResult.LessonID, &modelResult.Link,
 	)
 
-	return result
+	result = modelResult
 }
 
-func (f *FakeArtifactDb) Save(entity interface{}) interface{} {
-	artifactsInterface := f.Search(map[string]string{
-		"artifact_id": (entity.(domain.Artifact)).ArtifactID,
-	})
-
+func (f *FakeArtifactDb) Save(entity interface{}, result domain.Result) {
 	var artifacts []domain.Artifact
-	for _, artifact := range artifactsInterface {
-		artifacts = append(artifacts, artifact.(domain.Artifact))
-	}
+
+	f.Search(map[string]string{
+		"artifact_id": (entity.(domain.Artifact)).ArtifactID,
+	}, &artifacts)
 
 	f.Connect()
 	defer f.Db.Close()
@@ -117,21 +114,22 @@ func (f *FakeArtifactDb) Save(entity interface{}) interface{} {
 			log.Fatalf("erro ao executar a query: %s", err.Error())
 		}
 
-		var result domain.Artifact
+		var modelResult domain.Artifact
 		stmt, _ = f.Db.Prepare("SELECT * FROM artifacts WHERE artifact_id = ?")
 		_ = stmt.QueryRow(a.ArtifactID).Scan(
-			&result.ArtifactID, &result.LessonID, &result.Link,
+			&modelResult.ArtifactID, &modelResult.LessonID, &modelResult.Link,
 		)
 
-		return result
+		result = modelResult
+		return
 	}
 
-	result := f.Create(entity)
+	f.Create(entity, result)
 
-	return result
+	return
 }
 
-func (f *FakeArtifactDb) Search(param map[string]string) []interface{} {
+func (f *FakeArtifactDb) Search(param map[string]string, result domain.Result) {
 	var artifacts []interface{}
 
 	f.Connect()
@@ -152,13 +150,17 @@ func (f *FakeArtifactDb) Search(param map[string]string) []interface{} {
 		}
 	}
 
-	return artifacts
+	result = artifacts
+
+	return
 }
 
-func (f *FakeArtifactDb) Delete(param map[string]string) bool {
+func (f *FakeArtifactDb) Delete(param map[string]string, result domain.Result) bool {
 	wasDeleted := false
 
-	isSet := f.Search(param)
+	var isSet []struct {
+	}
+	f.Search(param, &isSet)
 	f.Connect()
 	defer f.Db.Close()
 
