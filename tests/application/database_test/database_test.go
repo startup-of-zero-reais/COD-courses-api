@@ -4,7 +4,6 @@ import (
 	"github.com/startup-of-zero-reais/COD-courses-api/application/database"
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
 	"github.com/stretchr/testify/require"
-	"log"
 	"testing"
 )
 import "gorm.io/gorm"
@@ -29,13 +28,11 @@ func SetupTest() *DatabaseUtil {
 }
 
 func (d *DatabaseUtil) BeforeTests() {
-	log.Println("LIMPANDO BANCO ANTES DOS TESTES...")
 	d.ClearDB()
 }
 
 func (d *DatabaseUtil) AfterTests() {
 	defer d.ClearDB()
-	log.Println("LIMPANDO BANCO DEPOIS DOS TESTES...")
 }
 
 func (d *DatabaseUtil) ClearDB() {
