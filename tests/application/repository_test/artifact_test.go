@@ -9,33 +9,38 @@ import (
 )
 
 type Sut struct {
-	Db   *mocks.FakeArtifactDb
+	Db   *mocks.DatabaseUtil
 	repo domain.ArtifactRepository
 }
 
 func makeSut() *Sut {
-	Db := &mocks.FakeArtifactDb{}
+	Db := mocks.SetupTest()
+	Db.Env = "testing"
+
 	return &Sut{
 		Db: Db,
 		repo: &repository.ArtifactRepositoryImpl{
-			Db: Db,
+			Db: Db.Database,
 		},
 	}
 }
 
+// TODO : FIX NIL POINTER
 func TestArtifactRepositoryCreate(t *testing.T) {
 	sut := makeSut()
-	sut.Db.BeforeTest()
+	sut.Db.BeforeTests()
+	defer sut.Db.AfterTests()
 
 	artifactSpy := mocks.MockArtifact("", "")
 	artifactSpy.ArtifactID = ""
 	require.Zero(t, artifactSpy.ArtifactID)
+	require.NotZero(t, artifactSpy.LessonID)
 
 	artifact, err := sut.repo.Create(artifactSpy)
 	require.Nil(t, err)
-	require.NotEmpty(t, artifact.ArtifactID)
-	require.NotEmpty(t, artifact.LessonID)
-	require.NotEmpty(t, artifact.Link)
+	require.NotZero(t, artifact.ArtifactID)
+	require.NotZero(t, artifact.LessonID)
+	require.NotZero(t, artifact.Link)
 
 	list, err := sut.repo.Get(map[string]string{"lesson_id": artifact.LessonID})
 	require.Nil(t, err)
@@ -44,8 +49,8 @@ func TestArtifactRepositoryCreate(t *testing.T) {
 
 func TestArtifactRepositorySave(t *testing.T) {
 	sut := makeSut()
-	sut.Db.BeforeTest()
-	defer sut.Db.AfterSingleTest()
+	sut.Db.BeforeTests()
+	defer sut.Db.AfterTests()
 
 	artifactSpy := mocks.MockArtifact("", "lesson-1")
 	artifact, err := sut.repo.Save(artifactSpy)
@@ -69,8 +74,8 @@ func TestArtifactRepositorySave(t *testing.T) {
 
 func TestArtifactRepositoryGet(t *testing.T) {
 	sut := makeSut()
-	sut.Db.BeforeTest()
-	defer sut.Db.AfterSingleTest()
+	sut.Db.BeforeTests()
+	defer sut.Db.AfterTests()
 
 	artifactSpy := mocks.MockArtifact("", "lesson-1")
 	_, err := sut.repo.Create(artifactSpy)
@@ -84,8 +89,8 @@ func TestArtifactRepositoryGet(t *testing.T) {
 
 func TestArtifactRepositoryDelete(t *testing.T) {
 	sut := makeSut()
-	sut.Db.BeforeTest()
-	defer sut.Db.AfterSingleTest()
+	sut.Db.BeforeTests()
+	defer sut.Db.AfterTests()
 
 	err := sut.repo.Delete("artifact-mock-uuid")
 	require.Error(t, err, "ocorreu um erro ao deletar artefato da base de dados")
