@@ -1,10 +1,15 @@
 package domain
 
+import (
+	"github.com/google/uuid"
+	"gorm.io/gorm"
+)
+
 type (
 	Artifact struct {
-		ArtifactID string
-		LessonID   string
-		Link       string
+		ArtifactID string `gorm:"type:varchar(36);primaryKey;column:artifact_id;"`
+		LessonID   string `gorm:"type:varchar(36);column:lesson_id"`
+		Link       string `gorm:"type:varchar(255);column:link"`
 	}
 
 	ArtifactRepository interface {
@@ -20,3 +25,8 @@ type (
 		Remove(artifactId string) error
 	}
 )
+
+func (a *Artifact) BeforeCreate(tx *gorm.DB) (err error) {
+	a.ArtifactID = uuid.New().String()
+	return
+}
