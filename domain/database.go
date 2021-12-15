@@ -1,11 +1,13 @@
 package domain
 
 type (
+	Result interface{}
+
 	Db interface {
 		Connect()
-		Create(entity interface{}) interface{}
-		Save(entity interface{}) interface{}
-		Search(param map[string]string) []interface{}
-		Delete(param map[string]string) bool
+		Create(entity interface{}, result Result)
+		Save(entity interface{}, result Result)
+		Search(param map[string]string, result Result)
+		Delete(param map[string]string, result Result) bool
 	}
 )
