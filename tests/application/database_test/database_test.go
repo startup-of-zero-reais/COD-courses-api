@@ -1,46 +1,14 @@
 package database_test
 
 import (
-	"github.com/startup-of-zero-reais/COD-courses-api/application/database"
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
+	"github.com/startup-of-zero-reais/COD-courses-api/tests/mocks"
 	"github.com/stretchr/testify/require"
 	"testing"
 )
-import "gorm.io/gorm"
-
-type (
-	DatabaseUtil struct {
-		Db *gorm.DB
-		*database.Database
-	}
-)
-
-func SetupTest() *DatabaseUtil {
-	db := database.NewDatabase()
-	db.Env = "testing"
-	db.Connect()
-
-	dbUtil := &DatabaseUtil{}
-	dbUtil.Database = db
-	dbUtil.Db = dbUtil.Database.Db
-
-	return dbUtil
-}
-
-func (d *DatabaseUtil) BeforeTests() {
-	d.ClearDB()
-}
-
-func (d *DatabaseUtil) AfterTests() {
-	defer d.ClearDB()
-}
-
-func (d *DatabaseUtil) ClearDB() {
-	d.Db.Where("1 = ?", 1).Delete(&domain.Artifact{})
-}
 
 func TestDatabaseCreate(t *testing.T) {
-	db := SetupTest()
+	db := mocks.SetupTest()
 	db.BeforeTests()
 	defer db.AfterTests()
 
@@ -59,7 +27,7 @@ func TestDatabaseCreate(t *testing.T) {
 }
 
 func TestDatabaseSave(t *testing.T) {
-	db := SetupTest()
+	db := mocks.SetupTest()
 	db.BeforeTests()
 	defer db.AfterTests()
 
@@ -80,7 +48,7 @@ func TestDatabaseSave(t *testing.T) {
 }
 
 func TestDatabaseSearch(t *testing.T) {
-	db := SetupTest()
+	db := mocks.SetupTest()
 	db.BeforeTests()
 	defer db.AfterTests()
 
@@ -102,7 +70,7 @@ func TestDatabaseSearch(t *testing.T) {
 }
 
 func TestDatabaseDelete(t *testing.T) {
-	db := SetupTest()
+	db := mocks.SetupTest()
 	db.BeforeTests()
 	defer db.AfterTests()
 
