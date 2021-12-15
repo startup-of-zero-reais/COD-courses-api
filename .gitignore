@@ -1,2 +1,3 @@
 .idea/
 tests/application/test_db.sqlite
+cover.out
