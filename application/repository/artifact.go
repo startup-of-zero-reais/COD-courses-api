@@ -9,13 +9,28 @@ type ArtifactRepositoryImpl struct {
 	Db domain.Db
 }
 
+func NewArtifactRepository(db domain.Db) *ArtifactRepositoryImpl {
+	return &ArtifactRepositoryImpl{
+		Db: db,
+	}
+}
+
 func (a *ArtifactRepositoryImpl) Create(artifact domain.Artifact) (*domain.Artifact, error) {
 	var result domain.Artifact
 	a.Db.Create(artifact, &result)
+
+	if result.ArtifactID == "" || &result == nil {
+		return nil, errors.New("falha ao criar artefato na base de dados")
+	}
+
 	return &result, nil
 }
 
 func (a *ArtifactRepositoryImpl) Save(artifact domain.Artifact) (*domain.Artifact, error) {
+	if artifact.ArtifactID == "" {
+		return nil, errors.New("artefato sem referência no banco")
+	}
+
 	var artifactSaved domain.Artifact
 	a.Db.Save(artifact, &artifactSaved)
 	if &artifactSaved == nil || artifactSaved.ArtifactID == "" {
@@ -33,7 +48,7 @@ func (a *ArtifactRepositoryImpl) Get(searchParam map[string]string) ([]domain.Ar
 }
 
 func (a *ArtifactRepositoryImpl) Delete(artifactId string) error {
-	wasDeleted := a.Db.Delete(map[string]string{"artifact_id": artifactId}, domain.Artifact{})
+	wasDeleted := a.Db.Delete(map[string]string{"artifact_id": artifactId}, &domain.Artifact{})
 
 	if !wasDeleted {
 		return errors.New("ocorreu um erro ao deletar artefato da base de dados")
