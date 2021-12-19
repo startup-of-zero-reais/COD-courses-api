@@ -43,3 +43,30 @@ func TestArtifactServiceAdd(t *testing.T) {
 		require.Error(t, err, "erro ao criar artefato")
 	})
 }
+
+func TestArtifactServiceList(t *testing.T) {
+	preListTest := func(returnArgs ...interface{}) (domain.ArtifactRepository, string) {
+		repo := new(mocks.ArtifactRepository)
+
+		lessonID := "lesson-id"
+		repo.On(
+			"Get", map[string]string{"lesson_id": lessonID},
+		).Return(returnArgs...)
+
+		return repo, lessonID
+	}
+
+	t.Run("should list all artifacts", func(t *testing.T) {
+		artifactsReturn := []domain.Artifact{
+			*entity_mocks.ArtifactMock("artifact-1", "lesson-id"),
+			*entity_mocks.ArtifactMock("artifact-2", "lesson-id"),
+		}
+		repo, lessonID := preListTest(artifactsReturn, nil)
+
+		svc := service.NewArtifactService(repo)
+		results, err := svc.List(lessonID)
+
+		require.Nil(t, err)
+		require.Len(t, results, 2)
+	})
+}
