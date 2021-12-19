@@ -69,4 +69,14 @@ func TestArtifactServiceList(t *testing.T) {
 		require.Nil(t, err)
 		require.Len(t, results, 2)
 	})
+	t.Run("should list empty artifacts list and an error", func(t *testing.T) {
+		artifactsReturn := make([]domain.Artifact, 1)
+		repo, lessonID := preListTest(artifactsReturn, errors.New("erro ao listar itens"))
+
+		svc := service.NewArtifactService(repo)
+		results, err := svc.List(lessonID)
+
+		require.Len(t, results, 0)
+		require.Error(t, err, "erro ao listar itens")
+	})
 }
