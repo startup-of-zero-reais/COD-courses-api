@@ -80,3 +80,15 @@ func TestArtifactServiceList(t *testing.T) {
 		require.Error(t, err, "erro ao listar itens")
 	})
 }
+
+func TestArtifactServiceRemove(t *testing.T) {
+	t.Run("should delete an artifact", func(t *testing.T) {
+		repo := new(mocks.ArtifactRepository)
+		repo.On("Delete", "artifact-uuid").Return(nil)
+
+		svc := service.NewArtifactService(repo)
+		err := svc.Remove("artifact-uuid")
+
+		require.Nil(t, err)
+	})
+}
