@@ -1,4 +1,4 @@
-package mocks
+package entity_mocks
 
 import "github.com/startup-of-zero-reais/COD-courses-api/domain"
 
