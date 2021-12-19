@@ -8,6 +8,12 @@ type ArtifactServiceImpl struct {
 	Repo domain.ArtifactRepository
 }
 
+func NewArtifactService(repo domain.ArtifactRepository) *ArtifactServiceImpl {
+	return &ArtifactServiceImpl{
+		Repo: repo,
+	}
+}
+
 func (s *ArtifactServiceImpl) Add(artifact domain.Artifact) (*domain.Artifact, error) {
 	newArtifact, err := s.Repo.Create(artifact)
 
