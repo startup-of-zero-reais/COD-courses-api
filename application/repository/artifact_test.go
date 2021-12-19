@@ -3,7 +3,8 @@ package repository_test
 import (
 	"github.com/startup-of-zero-reais/COD-courses-api/application/repository"
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
-	"github.com/startup-of-zero-reais/COD-courses-api/tests/mocks"
+	mocks "github.com/startup-of-zero-reais/COD-courses-api/mocks/domain"
+	"github.com/startup-of-zero-reais/COD-courses-api/tests/entity_mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -11,9 +12,9 @@ import (
 
 func TestArtifactRepositoryCreate(t *testing.T) {
 	preCreateTest := func(overrideResults ...func(args mock.Arguments)) (domain.Db, domain.Artifact, string) {
-		Db := new(mocks.DbMock)
+		Db := new(mocks.Db)
 
-		artifactSpy := *mocks.ArtifactMock("", "", "")
+		artifactSpy := *entity_mocks.ArtifactMock("", "", "")
 
 		var expected domain.Artifact
 		expectedID := "mock-uuid"
@@ -67,9 +68,9 @@ func TestArtifactRepositoryCreate(t *testing.T) {
 
 func TestArtifactRepositorySave(t *testing.T) {
 	preSaveTest := func(overrideResult ...func(args mock.Arguments)) (domain.Db, *domain.Artifact) {
-		Db := new(mocks.DbMock)
+		Db := new(mocks.Db)
 
-		artifactSpy := *mocks.ArtifactMock("mock-uuid", "", "")
+		artifactSpy := *entity_mocks.ArtifactMock("mock-uuid", "", "")
 
 		mockResult := func(args mock.Arguments) {
 			arg := args.Get(1).(*domain.Artifact)
@@ -128,12 +129,12 @@ func TestArtifactRepositorySave(t *testing.T) {
 
 func TestArtifactRepositoryGet(t *testing.T) {
 	preGetTests := func(searchParam map[string]string, overrideResults ...func(args mock.Arguments)) (domain.Db, *[]domain.Artifact) {
-		Db := new(mocks.DbMock)
+		Db := new(mocks.Db)
 
 		var expected []domain.Artifact
 		mockResult := func(args mock.Arguments) {
-			artifactSpy1 := *mocks.ArtifactMock("artifact-1", "lesson-mock", "")
-			artifactSpy2 := *mocks.ArtifactMock("artifact-2", "lesson-mock", "")
+			artifactSpy1 := *entity_mocks.ArtifactMock("artifact-1", "lesson-mock", "")
+			artifactSpy2 := *entity_mocks.ArtifactMock("artifact-2", "lesson-mock", "")
 
 			arg := args.Get(1).(*[]domain.Artifact)
 			*arg = append(*arg, artifactSpy1, artifactSpy2)
@@ -188,7 +189,7 @@ func TestArtifactRepositoryGet(t *testing.T) {
 func TestArtifactRepositoryDelete(t *testing.T) {
 
 	t.Run("should delete an artifact", func(t *testing.T) {
-		Db := new(mocks.DbMock)
+		Db := new(mocks.Db)
 
 		mockResult := func(args mock.Arguments) {
 			arg := args.Get(1).(*domain.Artifact)
@@ -203,7 +204,7 @@ func TestArtifactRepositoryDelete(t *testing.T) {
 		require.Nil(t, result)
 	})
 	t.Run("should not delete an artifact and return error", func(t *testing.T) {
-		Db := new(mocks.DbMock)
+		Db := new(mocks.Db)
 
 		mockResult := func(args mock.Arguments) {
 			arg := args.Get(1).(*domain.Artifact)
