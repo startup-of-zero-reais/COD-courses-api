@@ -8,6 +8,10 @@ usage:
 run:
 	echo "FAKE RUN"
 
+.PHONY: gen_mocks
+gen_mocks:
+	mockery --all --keeptree
+
 .PHONY: tests
 tests:
 	$(GOTEST) -coverprofile=./tests/coverage.out ./application/...
