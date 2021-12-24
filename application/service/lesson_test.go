@@ -14,7 +14,50 @@ func TestLessonServiceImpl_Add(t *testing.T) {}
 
 func TestLessonServiceImpl_Save(t *testing.T) {}
 
-func TestLessonServiceImpl_ListBySection(t *testing.T) {}
+func TestLessonServiceImpl_ListBySection(t *testing.T) {
+	preListTests := func(returns []domain.Lesson, errReturn error) (domain.LessonService, map[string]string) {
+		repo := new(mocks.LessonRepository)
+		query := map[string]string{
+			"page":     "1",
+			"per_page": "10",
+		}
+
+		repo.On("Get", "section-id", query).Return(returns, errReturn)
+
+		svc := service.NewLessonService(repo)
+		return svc, query
+	}
+
+	t.Run("should list lessons of a section", func(t *testing.T) {
+		returns := []domain.Lesson{
+			*entity_mocks.LessonMock(map[string]interface{}{"section_id": "section-id"}),
+			*entity_mocks.LessonMock(map[string]interface{}{"section_id": "section-id"}),
+		}
+		svc, query := preListTests(returns, nil)
+
+		expected, err := svc.ListBySection("section-id", query)
+
+		require.Nil(t, err)
+		require.Len(t, expected, 2)
+	})
+	t.Run("should return an empty slice", func(t *testing.T) {
+		var returns []domain.Lesson
+		svc, query := preListTests(returns, nil)
+
+		expected, err := svc.ListBySection("section-not-exists", query)
+
+		require.Nil(t, err)
+		require.Empty(t, expected)
+	})
+	t.Run("should fail if section not exists", func(t *testing.T) {
+		svc, query := preListTests(nil, errors.New("não foi possível recuperar aulas de uma seção inexistente"))
+
+		expected, err := svc.ListBySection("section-not-exists", query)
+
+		require.Nil(t, expected)
+		require.EqualError(t, err, "não foi possível recuperar aulas de uma seção inexistente")
+	})
+}
 
 func TestLessonServiceImpl_Get(t *testing.T) {
 	preGetTests := func(argReturns []domain.Lesson, errReturn error) domain.LessonRepository {
