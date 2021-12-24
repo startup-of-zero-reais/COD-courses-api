@@ -29,6 +29,13 @@ type (
 		Delete(lessonID string) error
 		Counter
 	}
+
+	LessonService interface {
+		Add(lesson Lesson) (*Lesson, error)
+		ListBySection(sectionID string, query map[string]string) ([]Lesson, error)
+		Get(lessonID string) (*Lesson, error)
+		Delete(lessonID string) error
+	}
 )
 
 func (l *Lesson) BeforeCreate(tx *gorm.DB) (err error) {
