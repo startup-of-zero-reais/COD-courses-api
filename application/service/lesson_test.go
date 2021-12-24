@@ -2,6 +2,7 @@ package service_test
 
 import (
 	"errors"
+	"github.com/google/uuid"
 	"github.com/startup-of-zero-reais/COD-courses-api/application/service"
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
 	mocks "github.com/startup-of-zero-reais/COD-courses-api/mocks/domain"
@@ -23,7 +24,9 @@ func TestLessonServiceImpl_Add(t *testing.T) {
 	}
 
 	t.Run("should add a lesson", func(t *testing.T) {
-		lessonReturn := entity_mocks.LessonMock()
+		lessonReturn := entity_mocks.LessonMock(map[string]interface{}{
+			"lesson_id": uuid.NewString(),
+		})
 		svc, lessonSpy := preAddTest(lessonReturn, nil)
 		lessonSpy.LessonID = ""
 
@@ -36,11 +39,20 @@ func TestLessonServiceImpl_Add(t *testing.T) {
 	})
 	t.Run("should not add a lesson which has registry", func(t *testing.T) {
 		svc, lessonSpy := preAddTest(nil, errors.New("aula ja existe na base de dados"))
+		lessonSpy.LessonID = "has-id"
 
 		expected, err := svc.Add(*lessonSpy)
 
 		require.Nil(t, expected)
 		require.EqualError(t, err, "aula ja existe na base de dados")
+	})
+	t.Run("should fail if cannot create", func(t *testing.T) {
+		svc, lessonSpy := preAddTest(nil, errors.New("erro do banco"))
+
+		expected, err := svc.Add(*lessonSpy)
+
+		require.Nil(t, expected)
+		require.EqualError(t, err, "erro do banco")
 	})
 }
 
