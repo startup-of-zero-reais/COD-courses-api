@@ -26,7 +26,16 @@ func (l *LessonServiceImpl) Save(lesson domain.Lesson) (*domain.Lesson, error) {
 }
 
 func (l *LessonServiceImpl) ListBySection(sectionID string, query map[string]string) ([]domain.Lesson, error) {
-	return nil, nil
+	search := map[string]string{
+		"section_id": sectionID,
+	}
+
+	result, err := l.LessonRepository.Get(search, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (l *LessonServiceImpl) Get(lessonID string) (*domain.Lesson, error) {
