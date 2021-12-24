@@ -173,3 +173,12 @@ func TestLessonRepositoryImpl_Get(t *testing.T) {
 		require.Len(t, expected, 2)
 	})
 }
+
+func TestLessonRepositoryImpl_Delete(t *testing.T) {
+	t.Run("should delete a lesson", func(t *testing.T) {
+
+	})
+	t.Run("should fail on error", func(t *testing.T) {
+		
+	})
+}
