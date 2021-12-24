@@ -25,7 +25,7 @@ type (
 	LessonRepository interface {
 		Create(lesson Lesson) (*Lesson, error)
 		Save(lesson Lesson) (*Lesson, error)
-		Get(search map[string]string, pagination map[string]string)
+		Get(search map[string]string, pagination map[string]string) ([]Lesson, error)
 		Delete(lessonID string) error
 		Counter
 	}
