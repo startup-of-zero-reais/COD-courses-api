@@ -71,6 +71,78 @@ func TestLessonRepositoryImpl_Create(t *testing.T) {
 	})
 }
 
+func TestLessonRepositoryImpl_Save(t *testing.T) {
+	preSaveTest := func(overrideID string, overrideMock ...func(args mock.Arguments)) (domain.Db, domain.Lesson) {
+		expectedID := uuid.NewString()
+
+		if overrideID != "" {
+			expectedID = overrideID
+		}
+		if overrideID == "-" {
+			expectedID = ""
+		}
+
+		lessonSpy := *entity_mocks.LessonMock(map[string]interface{}{
+			"lesson_id": expectedID,
+		})
+
+		var expected domain.Lesson
+
+		mockResult := func(args mock.Arguments) {
+			arg := args.Get(1).(*domain.Lesson)
+			arg.LessonID = lessonSpy.LessonID
+			arg.SectionID = lessonSpy.SectionID
+			arg.VideoSource = lessonSpy.VideoSource
+			arg.DurationTotal = lessonSpy.DurationTotal
+			arg.CreatedAt = lessonSpy.CreatedAt
+			arg.UpdatedAt = lessonSpy.UpdatedAt
+
+			if len(overrideMock) > 0 {
+				for _, override := range overrideMock {
+					override(args)
+				}
+			}
+		}
+
+		Db := new(mocks.Db)
+		Db.On("Save", lessonSpy, &expected).Return().Run(mockResult)
+
+		return Db, lessonSpy
+	}
+
+	t.Run("should update a lesson", func(t *testing.T) {
+		Db, lessonSpy := preSaveTest("")
+
+		repo := repository.NewLessonRepository(Db)
+		expected, err := repo.Save(lessonSpy)
+
+		require.Nil(t, err)
+		require.NotNil(t, expected)
+	})
+	t.Run("should fail on lessonID empty", func(t *testing.T) {
+		Db, lessonSpy := preSaveTest("-")
+
+		repo := repository.NewLessonRepository(Db)
+		expected, err := repo.Save(lessonSpy)
+
+		require.Nil(t, expected)
+		require.NotNil(t, err)
+		require.EqualError(t, err, "esta aula nao possui registro na base de dados")
+	})
+	t.Run("should fail on lessonID updated is empty", func(t *testing.T) {
+		Db, lessonSpy := preSaveTest("", func(args mock.Arguments) {
+			arg := args.Get(1).(*domain.Lesson)
+			arg.LessonID = ""
+		})
+
+		repo := repository.NewLessonRepository(Db)
+		expected, err := repo.Save(lessonSpy)
+
+		require.Nil(t, expected)
+		require.EqualError(t, err, "nao foi possível atualizar o registro")
+	})
+}
+
 func TestLessonRepositoryImpl_Get(t *testing.T) {
 	t.Run("should get lessons", func(t *testing.T) {
 		search := map[string]string{
