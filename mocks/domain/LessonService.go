@@ -95,8 +95,8 @@ func (_m *LessonService) ListBySection(sectionID string, query map[string]string
 	return r0, r1
 }
 
-// Update provides a mock function with given fields: lesson
-func (_m *LessonService) Update(lesson domain.Lesson) (*domain.Lesson, error) {
+// Save provides a mock function with given fields: lesson
+func (_m *LessonService) Save(lesson domain.Lesson) (*domain.Lesson, error) {
 	ret := _m.Called(lesson)
 
 	var r0 *domain.Lesson
