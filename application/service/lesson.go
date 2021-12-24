@@ -31,5 +31,5 @@ func (l *LessonServiceImpl) Get(lessonID string) (*domain.Lesson, error) {
 }
 
 func (l *LessonServiceImpl) Delete(lessonID string) error {
-	return nil
+	return l.LessonRepository.Delete(lessonID)
 }
