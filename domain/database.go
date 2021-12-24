@@ -11,4 +11,8 @@ type (
 		Delete(param map[string]string, result Result) bool
 		TotalRows() uint
 	}
+
+	Counter interface {
+		Count() uint
+	}
 )
