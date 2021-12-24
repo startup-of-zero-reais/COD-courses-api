@@ -35,13 +35,13 @@ func (_m *ArtifactService) Add(artifact domain.Artifact) (*domain.Artifact, erro
 	return r0, r1
 }
 
-// List provides a mock function with given fields: lessonId
-func (_m *ArtifactService) List(lessonId string) ([]domain.Artifact, error) {
-	ret := _m.Called(lessonId)
+// List provides a mock function with given fields: lessonId, query
+func (_m *ArtifactService) List(lessonId string, query map[string]string) ([]domain.Artifact, error) {
+	ret := _m.Called(lessonId, query)
 
 	var r0 []domain.Artifact
-	if rf, ok := ret.Get(0).(func(string) []domain.Artifact); ok {
-		r0 = rf(lessonId)
+	if rf, ok := ret.Get(0).(func(string, map[string]string) []domain.Artifact); ok {
+		r0 = rf(lessonId, query)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]domain.Artifact)
@@ -49,8 +49,8 @@ func (_m *ArtifactService) List(lessonId string) ([]domain.Artifact, error) {
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(lessonId)
+	if rf, ok := ret.Get(1).(func(string, map[string]string) error); ok {
+		r1 = rf(lessonId, query)
 	} else {
 		r1 = ret.Error(1)
 	}

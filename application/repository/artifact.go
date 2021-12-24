@@ -40,9 +40,18 @@ func (a *ArtifactRepositoryImpl) Save(artifact domain.Artifact) (*domain.Artifac
 	return &artifactSaved, nil
 }
 
-func (a *ArtifactRepositoryImpl) Get(searchParam map[string]string) ([]domain.Artifact, error) {
+func (a *ArtifactRepositoryImpl) Get(searchParam map[string]string, pagination map[string]string) ([]domain.Artifact, error) {
 	var artifacts []domain.Artifact
-	a.Db.Search(searchParam, &artifacts)
+
+	searchParams := map[string]string{}
+	for key, value := range searchParam {
+		searchParams[key] = value
+	}
+	for key, value := range pagination {
+		searchParams[key] = value
+	}
+
+	a.Db.Search(searchParams, &artifacts)
 
 	return artifacts, nil
 }

@@ -24,10 +24,10 @@ func (s *ArtifactServiceImpl) Add(artifact domain.Artifact) (*domain.Artifact, e
 	return newArtifact, nil
 }
 
-func (s *ArtifactServiceImpl) List(lessonId string) ([]domain.Artifact, error) {
+func (s *ArtifactServiceImpl) List(lessonId string, query map[string]string) ([]domain.Artifact, error) {
 	var artifacts []domain.Artifact
 
-	artifacts, err := s.Repo.Get(map[string]string{"lesson_id": lessonId})
+	artifacts, err := s.Repo.Get(map[string]string{"lesson_id": lessonId}, query)
 	if err != nil {
 		return nil, err
 	}

@@ -157,11 +157,21 @@ func TestArtifactRepositoryGet(t *testing.T) {
 		searchParam := map[string]string{
 			"lesson_id": "lesson-mock",
 		}
+		pagination := map[string]string{
+			"page":     "1",
+			"per_page": "10",
+		}
 
-		Db, expected := preGetTests(searchParam)
+		dbMergeParam := map[string]string{
+			"lesson_id": "lesson-mock",
+			"page":      "1",
+			"per_page":  "10",
+		}
+
+		Db, expected := preGetTests(dbMergeParam)
 
 		repo := repository.NewArtifactRepository(Db)
-		result, err := repo.Get(searchParam)
+		result, err := repo.Get(searchParam, pagination)
 
 		require.Nil(t, err)
 		require.NotEmpty(t, result)
@@ -176,10 +186,20 @@ func TestArtifactRepositoryGet(t *testing.T) {
 		searchParam := map[string]string{
 			"artifact_id": "void-uuid",
 		}
-		Db, _ := preGetTests(searchParam, mockResult)
+		pagination := map[string]string{
+			"page":     "1",
+			"per_page": "10",
+		}
+		dbMergeParam := map[string]string{
+			"artifact_id": "void-uuid",
+			"page":        "1",
+			"per_page":    "10",
+		}
+
+		Db, _ := preGetTests(dbMergeParam, mockResult)
 
 		repo := repository.NewArtifactRepository(Db)
-		result, err := repo.Get(searchParam)
+		result, err := repo.Get(searchParam, pagination)
 
 		require.Nil(t, err)
 		require.Empty(t, result)

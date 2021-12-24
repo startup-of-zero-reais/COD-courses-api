@@ -7,6 +7,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"log"
+	"strconv"
 )
 import "gorm.io/gorm"
 
@@ -76,7 +77,24 @@ func (d *Database) Save(entity interface{}, result domain.Result) {
 }
 
 func (d *Database) Search(param map[string]string, result domain.Result) {
-	d.Db.Find(&result, param).Scan(&result)
+	offset := 0
+	limit := 10
+
+	for k, v := range param {
+		switch k {
+		case "per_page":
+			perPage, _ := strconv.Atoi(v)
+			limit = perPage
+		case "page":
+			page, _ := strconv.Atoi(v)
+			if page <= 0 {
+				page = 1
+			}
+			offset = (limit * page) - limit
+		}
+	}
+
+	d.Db.Offset(offset).Limit(limit).Find(&result, param).Scan(&result)
 }
 
 func (d *Database) Delete(param map[string]string, result domain.Result) bool {

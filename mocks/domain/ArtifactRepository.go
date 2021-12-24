@@ -49,13 +49,13 @@ func (_m *ArtifactRepository) Delete(artifactId string) error {
 	return r0
 }
 
-// Get provides a mock function with given fields: searchParam
-func (_m *ArtifactRepository) Get(searchParam map[string]string) ([]domain.Artifact, error) {
-	ret := _m.Called(searchParam)
+// Get provides a mock function with given fields: searchParam, pagination
+func (_m *ArtifactRepository) Get(searchParam map[string]string, pagination map[string]string) ([]domain.Artifact, error) {
+	ret := _m.Called(searchParam, pagination)
 
 	var r0 []domain.Artifact
-	if rf, ok := ret.Get(0).(func(map[string]string) []domain.Artifact); ok {
-		r0 = rf(searchParam)
+	if rf, ok := ret.Get(0).(func(map[string]string, map[string]string) []domain.Artifact); ok {
+		r0 = rf(searchParam, pagination)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]domain.Artifact)
@@ -63,8 +63,8 @@ func (_m *ArtifactRepository) Get(searchParam map[string]string) ([]domain.Artif
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(map[string]string) error); ok {
-		r1 = rf(searchParam)
+	if rf, ok := ret.Get(1).(func(map[string]string, map[string]string) error); ok {
+		r1 = rf(searchParam, pagination)
 	} else {
 		r1 = ret.Error(1)
 	}
