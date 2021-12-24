@@ -12,7 +12,42 @@ import (
 
 func TestLessonServiceImpl_Add(t *testing.T) {}
 
-func TestLessonServiceImpl_Save(t *testing.T) {}
+func TestLessonServiceImpl_Save(t *testing.T) {
+	preSaveTest := func(lessonReturn *domain.Lesson, errorReturn error) (domain.LessonService, *domain.Lesson) {
+		lessonSpy := *entity_mocks.LessonMock()
+
+		repo := new(mocks.LessonRepository)
+
+		repo.On("Save", lessonSpy).Return(lessonReturn, errorReturn)
+
+		svc := service.NewLessonService(repo)
+
+		return svc, &lessonSpy
+	}
+
+	t.Run("should save a lesson", func(t *testing.T) {
+		lessonResult := entity_mocks.LessonMock(map[string]interface{}{
+			"duration_total": uint(15),
+		})
+		svc, lessonSpy := preSaveTest(lessonResult, nil)
+
+		expected, err := svc.Save(*lessonSpy)
+
+		require.Nil(t, err)
+		require.NotNil(t, expected)
+		require.Equal(t, expected.LessonID, lessonSpy.LessonID)
+		require.Equal(t, expected.DurationTotal, uint(15))
+		require.NotEqual(t, expected.DurationTotal, lessonSpy.DurationTotal)
+	})
+	t.Run("should not save a lesson which does not exists", func(t *testing.T) {
+		svc, lessonSpy := preSaveTest(nil, errors.New("erro ao atualizar uma aula inexistente"))
+
+		expected, err := svc.Save(*lessonSpy)
+
+		require.Nil(t, expected)
+		require.EqualError(t, err, "erro ao atualizar uma aula inexistentes")
+	})
+}
 
 func TestLessonServiceImpl_ListBySection(t *testing.T) {
 	preListTests := func(returns []domain.Lesson, errReturn error) (domain.LessonService, map[string]string, map[string]string) {
