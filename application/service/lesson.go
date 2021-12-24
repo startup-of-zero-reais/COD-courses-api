@@ -1,6 +1,9 @@
 package service
 
-import "github.com/startup-of-zero-reais/COD-courses-api/domain"
+import (
+	"errors"
+	"github.com/startup-of-zero-reais/COD-courses-api/domain"
+)
 
 type (
 	LessonServiceImpl struct {
@@ -27,7 +30,24 @@ func (l *LessonServiceImpl) ListBySection(sectionID string, query map[string]str
 }
 
 func (l *LessonServiceImpl) Get(lessonID string) (*domain.Lesson, error) {
-	return nil, nil
+	result, err := l.LessonRepository.Get(map[string]string{
+		"lesson_id": lessonID,
+	}, map[string]string{"page": "1", "per_page": "1"})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(result) <= 0 {
+		return nil, errors.New("nenhuma aula encontrada")
+	}
+
+	if len(result) > 1 {
+		return nil, errors.New("mais aulas encontradas. contate o administrador do sistema")
+	}
+
+	lesson := result[0]
+	return &lesson, nil
 }
 
 func (l *LessonServiceImpl) Delete(lessonID string) error {
