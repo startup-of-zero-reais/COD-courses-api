@@ -10,7 +10,39 @@ import (
 	"testing"
 )
 
-func TestLessonServiceImpl_Add(t *testing.T) {}
+func TestLessonServiceImpl_Add(t *testing.T) {
+	preAddTest := func(lessonReturn *domain.Lesson, errorReturn error) (domain.LessonService, *domain.Lesson) {
+		lessonSpy := entity_mocks.LessonMock()
+		repo := new(mocks.LessonRepository)
+
+		repo.On("Create", *lessonSpy).Return(lessonReturn, errorReturn)
+
+		svc := service.NewLessonService(repo)
+
+		return svc, lessonSpy
+	}
+
+	t.Run("should add a lesson", func(t *testing.T) {
+		lessonReturn := entity_mocks.LessonMock()
+		svc, lessonSpy := preAddTest(lessonReturn, nil)
+		lessonSpy.LessonID = ""
+
+		expected, err := svc.Add(*lessonSpy)
+
+		require.Nil(t, err)
+		require.NotNil(t, expected)
+		require.Zero(t, lessonSpy.LessonID)
+		require.NotZero(t, expected.LessonID)
+	})
+	t.Run("should not add a lesson which has registry", func(t *testing.T) {
+		svc, lessonSpy := preAddTest(nil, errors.New("aula ja existe na base de dados"))
+
+		expected, err := svc.Add(*lessonSpy)
+
+		require.Nil(t, expected)
+		require.EqualError(t, err, "aula ja existe na base de dados")
+	})
+}
 
 func TestLessonServiceImpl_Save(t *testing.T) {
 	preSaveTest := func(lessonReturn *domain.Lesson, errorReturn error) (domain.LessonService, *domain.Lesson) {
