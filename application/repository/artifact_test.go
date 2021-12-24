@@ -239,3 +239,16 @@ func TestArtifactRepositoryDelete(t *testing.T) {
 		require.Error(t, result, "ocorreu um erro ao deletar artefato da base de dados")
 	})
 }
+
+func TestArtifactRepositoryCount(t *testing.T) {
+	t.Run("should count all result", func(t *testing.T) {
+		Db := new(mocks.Db)
+
+		Db.On("TotalRows").Return(uint(10))
+
+		repo := repository.NewArtifactRepository(Db)
+		rows := repo.Count()
+
+		require.Equal(t, uint(10), rows)
+	})
+}

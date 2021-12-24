@@ -9,5 +9,6 @@ type (
 		Save(entity interface{}, result Result)
 		Search(param map[string]string, result Result)
 		Delete(param map[string]string, result Result) bool
+		TotalRows() uint
 	}
 )

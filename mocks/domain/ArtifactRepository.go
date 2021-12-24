@@ -12,6 +12,20 @@ type ArtifactRepository struct {
 	mock.Mock
 }
 
+// Count provides a mock function with given fields:
+func (_m *ArtifactRepository) Count() uint {
+	ret := _m.Called()
+
+	var r0 uint
+	if rf, ok := ret.Get(0).(func() uint); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(uint)
+	}
+
+	return r0
+}
+
 // Create provides a mock function with given fields: artifact
 func (_m *ArtifactRepository) Create(artifact domain.Artifact) (*domain.Artifact, error) {
 	ret := _m.Called(artifact)

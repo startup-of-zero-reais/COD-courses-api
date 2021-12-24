@@ -65,3 +65,7 @@ func (a *ArtifactRepositoryImpl) Delete(artifactId string) error {
 
 	return nil
 }
+
+func (a *ArtifactRepositoryImpl) Count() uint {
+	return a.Db.TotalRows()
+}

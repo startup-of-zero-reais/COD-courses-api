@@ -101,3 +101,12 @@ func (d *Database) Delete(param map[string]string, result domain.Result) bool {
 	r := d.Db.Where(param).Delete(&result)
 	return r.RowsAffected > 0
 }
+
+func (d *Database) TotalRows() uint {
+	var result interface{}
+	r := d.Db.Select("1").FindInBatches(&result, 10000, func(tx *gorm.DB, batch int) error {
+		return nil
+	})
+
+	return uint(r.RowsAffected)
+}

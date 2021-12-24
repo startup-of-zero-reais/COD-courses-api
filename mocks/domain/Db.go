@@ -45,3 +45,17 @@ func (_m *Db) Save(entity interface{}, result domain.Result) {
 func (_m *Db) Search(param map[string]string, result domain.Result) {
 	_m.Called(param, result)
 }
+
+// TotalRows provides a mock function with given fields:
+func (_m *Db) TotalRows() uint {
+	ret := _m.Called()
+
+	var r0 uint
+	if rf, ok := ret.Get(0).(func() uint); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(uint)
+	}
+
+	return r0
+}

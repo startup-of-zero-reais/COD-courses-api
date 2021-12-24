@@ -17,6 +17,7 @@ type (
 		Save(artifact Artifact) (*Artifact, error)
 		Get(searchParam map[string]string, pagination map[string]string) ([]Artifact, error)
 		Delete(artifactId string) error
+		Count() uint
 	}
 
 	ArtifactService interface {
