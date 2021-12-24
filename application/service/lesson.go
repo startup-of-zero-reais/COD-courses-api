@@ -22,7 +22,12 @@ func (l *LessonServiceImpl) Add(lesson domain.Lesson) (*domain.Lesson, error) {
 }
 
 func (l *LessonServiceImpl) Save(lesson domain.Lesson) (*domain.Lesson, error) {
-	return nil, nil
+	result, err := l.LessonRepository.Save(lesson)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 func (l *LessonServiceImpl) ListBySection(sectionID string, query map[string]string) ([]domain.Lesson, error) {

@@ -45,7 +45,7 @@ func TestLessonServiceImpl_Save(t *testing.T) {
 		expected, err := svc.Save(*lessonSpy)
 
 		require.Nil(t, expected)
-		require.EqualError(t, err, "erro ao atualizar uma aula inexistentes")
+		require.EqualError(t, err, "erro ao atualizar uma aula inexistente")
 	})
 }
 
