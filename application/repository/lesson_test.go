@@ -175,10 +175,33 @@ func TestLessonRepositoryImpl_Get(t *testing.T) {
 }
 
 func TestLessonRepositoryImpl_Delete(t *testing.T) {
-	t.Run("should delete a lesson", func(t *testing.T) {
+	preDeleteTest := func(lessonID string, wasDeleted bool) domain.Db {
+		mockResult := func(args mock.Arguments) {
+			arg := args.Get(1).(*domain.Lesson)
+			arg.LessonID = ""
+			arg = nil
+		}
 
+		Db := new(mocks.Db)
+		Db.On("Delete", map[string]string{"lesson_id": lessonID}, &domain.Lesson{}).Return(wasDeleted).Run(mockResult)
+
+		return Db
+	}
+
+	t.Run("should delete a lesson", func(t *testing.T) {
+		Db := preDeleteTest("lesson-id", true)
+
+		repo := repository.NewLessonRepository(Db)
+		err := repo.Delete("lesson-id")
+
+		require.Nil(t, err)
 	})
 	t.Run("should fail on error", func(t *testing.T) {
-		
+		Db := preDeleteTest("lesson-id", false)
+
+		repo := repository.NewLessonRepository(Db)
+		err := repo.Delete("lesson-id")
+
+		require.EqualError(t, err, "erro ao deletar aula")
 	})
 }
