@@ -67,7 +67,7 @@ func TestLessonRepositoryImpl_Create(t *testing.T) {
 
 		require.Nil(t, expected)
 		require.NotNil(t, err)
-		require.Error(t, err)
+		require.EqualError(t, err, "não foi possível criar aula na base de dados")
 	})
 }
 
