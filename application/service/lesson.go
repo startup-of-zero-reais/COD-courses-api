@@ -4,8 +4,15 @@ import "github.com/startup-of-zero-reais/COD-courses-api/domain"
 
 type (
 	LessonServiceImpl struct {
+		domain.LessonRepository
 	}
 )
+
+func NewLessonService(repo domain.LessonRepository) *LessonServiceImpl {
+	return &LessonServiceImpl{
+		LessonRepository: repo,
+	}
+}
 
 func (l *LessonServiceImpl) Add(lesson domain.Lesson) (*domain.Lesson, error) {
 	return nil, nil
