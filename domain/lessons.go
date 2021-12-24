@@ -32,7 +32,7 @@ type (
 
 	LessonService interface {
 		Add(lesson Lesson) (*Lesson, error)
-		Update(lesson Lesson) (*Lesson, error)
+		Save(lesson Lesson) (*Lesson, error)
 		ListBySection(sectionID string, query map[string]string) ([]Lesson, error)
 		Get(lessonID string) (*Lesson, error)
 		Delete(lessonID string) error
