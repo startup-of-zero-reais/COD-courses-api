@@ -54,5 +54,14 @@ func (l *LessonRepositoryImpl) Get(search map[string]string, pagination map[stri
 }
 
 func (l *LessonRepositoryImpl) Delete(lessonID string) error {
+	var result domain.Lesson
+	wasDeleted := l.Db.Delete(map[string]string{
+		"lesson_id": lessonID,
+	}, &result)
+
+	if !wasDeleted {
+		return errors.New("erro ao deletar aula")
+	}
+
 	return nil
 }
