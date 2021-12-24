@@ -4,6 +4,8 @@ import "testing"
 
 func TestLessonServiceImpl_Add(t *testing.T) {}
 
+func TestLessonServiceImpl_Save(t *testing.T) {}
+
 func TestLessonServiceImpl_ListBySection(t *testing.T) {}
 
 func TestLessonServiceImpl_Get(t *testing.T) {}
