@@ -11,6 +11,10 @@ func (l *LessonServiceImpl) Add(lesson domain.Lesson) (*domain.Lesson, error) {
 	return nil, nil
 }
 
+func (l *LessonServiceImpl) Save(lesson domain.Lesson) (*domain.Lesson, error) {
+	return nil, nil
+}
+
 func (l *LessonServiceImpl) ListBySection(sectionID string, query map[string]string) ([]domain.Lesson, error) {
 	return nil, nil
 }
