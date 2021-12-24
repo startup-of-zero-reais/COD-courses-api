@@ -30,7 +30,18 @@ func (l *LessonRepositoryImpl) Create(lesson domain.Lesson) (*domain.Lesson, err
 }
 
 func (l *LessonRepositoryImpl) Save(lesson domain.Lesson) (*domain.Lesson, error) {
-	return nil, nil
+	if lesson.LessonID == "" {
+		return nil, errors.New("esta aula nao possui registro na base de dados")
+	}
+
+	var result domain.Lesson
+	l.Db.Save(lesson, &result)
+
+	if result.LessonID == "" || result.LessonID != lesson.LessonID {
+		return nil, errors.New("nao foi possível atualizar o registro")
+	}
+
+	return &result, nil
 }
 
 func (l *LessonRepositoryImpl) Get(search map[string]string, pagination map[string]string) ([]domain.Lesson, error) {
