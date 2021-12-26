@@ -1,6 +1,9 @@
 package repository
 
-import "github.com/startup-of-zero-reais/COD-courses-api/domain"
+import (
+	"errors"
+	"github.com/startup-of-zero-reais/COD-courses-api/domain"
+)
 
 type (
 	SectionRepositoryImpl struct {
@@ -15,6 +18,10 @@ func NewSectionRepository(Db domain.Db) domain.SectionRepository {
 func (s *SectionRepositoryImpl) Create(section domain.Section) (*domain.Section, error) {
 	var result domain.Section
 	s.Db.Create(section, &result)
+
+	if result.SectionID == "" {
+		return nil, errors.New("erro ao criar seção")
+	}
 
 	return &result, nil
 }
