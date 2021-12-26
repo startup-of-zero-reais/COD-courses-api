@@ -27,8 +27,13 @@ func (s *SectionRepositoryImpl) Create(section domain.Section) (*domain.Section,
 }
 
 func (s *SectionRepositoryImpl) Save(section domain.Section) (*domain.Section, error) {
+	if section.SectionID == "" {
+		return nil, errors.New("erro ao salvar uma seção inexistente")
+	}
+
 	var result domain.Section
 	s.Db.Save(section, &result)
+	
 	return &result, nil
 }
 
