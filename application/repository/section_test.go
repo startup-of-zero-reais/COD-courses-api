@@ -73,6 +73,32 @@ func TestSectionRepositoryImpl_Create(t *testing.T) {
 }
 
 func TestSectionRepositoryImpl_Save(t *testing.T) {
+	preSaveTest := func(spy *domain.Section, overrides ...func(args mock.Arguments)) domain.SectionRepository {
+		Db := new(mocks.Db)
+
+		mockResult := func(args mock.Arguments) {
+			arg := args.Get(1).(*domain.Section)
+
+			arg.SectionID = spy.SectionID
+			arg.ModuleID = spy.ModuleID
+			arg.Label = spy.Label
+			arg.Lessons = spy.Lessons
+
+			if len(overrides) > 0 {
+				for _, override := range overrides {
+					override(args)
+				}
+			}
+		}
+		var result domain.Section
+
+		Db.On("Save", *spy, &result).Return().Run(mockResult)
+
+		repo := repository.NewSectionRepository(Db)
+
+		return repo
+	}
+
 	t.Run("should save a section", func(t *testing.T) {
 
 	})
