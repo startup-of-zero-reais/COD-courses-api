@@ -17,6 +17,13 @@ func ReflectSlice(thisSlice interface{}, ofThis interface{}) error {
 		return errors.New("o segundo argumento de ReflectSlice deve ser um slice")
 	}
 
+	if reflected.Len() <= 0 || reflected.IsZero() {
+		ptrSlice.Elem().Set(reflect.Zero(
+			ptrSlice.Elem().Type(),
+		))
+		return nil
+	}
+
 	reflectedSlice := reflect.MakeSlice(
 		reflect.SliceOf(reflected.Index(0).Type()),
 		0,
