@@ -168,7 +168,18 @@ func TestSectionRepositoryImpl_Get(t *testing.T) {
 	}
 
 	t.Run("should return a single section", func(t *testing.T) {
+		repo, pagination := preGetTest("section-id", []domain.Section{
+			*entity_mocks.SectionMock(),
+		})
+		search := map[string]string{
+			"section_id": "section-id",
+		}
 
+		expected, err := repo.Get(search, pagination)
+
+		assert.Nil(t, err)
+		assert.NotNil(t, expected)
+		assert.Len(t, expected, 1)
 	})
 	t.Run("should fail if has no section", func(t *testing.T) {
 
