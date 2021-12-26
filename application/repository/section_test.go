@@ -73,7 +73,12 @@ func TestSectionRepositoryImpl_Create(t *testing.T) {
 }
 
 func TestSectionRepositoryImpl_Save(t *testing.T) {
+	t.Run("should save a section", func(t *testing.T) {
 
+	})
+	t.Run("should fail on save", func(t *testing.T) {
+
+	})
 }
 
 func TestSectionRepositoryImpl_Get(t *testing.T) {
