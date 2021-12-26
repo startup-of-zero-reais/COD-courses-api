@@ -182,7 +182,14 @@ func TestSectionRepositoryImpl_Get(t *testing.T) {
 		assert.Len(t, expected, 1)
 	})
 	t.Run("should fail if has no section", func(t *testing.T) {
+		repo, pagination := preGetTest("not-exists-section", []domain.Section{})
+		search := map[string]string{
+			"section_id": "not-exists-section",
+		}
+		expected, err := repo.Get(search, pagination)
 
+		assert.Nil(t, expected)
+		assert.EqualError(t, err, "nenhuma seção encontrada")
 	})
 }
 
