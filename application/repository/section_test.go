@@ -100,7 +100,19 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 	}
 
 	t.Run("should save a section", func(t *testing.T) {
+		sectionSpy := entity_mocks.SectionMock()
 
+		require.Equal(t, sectionSpy.Label, "mock-label")
+
+		repo := preSaveTest(sectionSpy)
+		sectionSpy.Label = "updated-label"
+
+		expected, err := repo.Save(*sectionSpy)
+
+		require.Nil(t, err)
+		require.NotNil(t, expected)
+		require.Equal(t, sectionSpy.SectionID, expected.SectionID)
+		require.Equal(t, "updated-label", expected.Label)
 	})
 	t.Run("should fail on save", func(t *testing.T) {
 
