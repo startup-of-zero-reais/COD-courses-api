@@ -145,7 +145,7 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 }
 
 func TestSectionRepositoryImpl_Get(t *testing.T) {
-	preGetTest := func(sectionID string, overrides ...func(args mock.Arguments)) domain.SectionRepository {
+	preGetTest := func(sectionID string, results []domain.Section) (domain.SectionRepository, map[string]string) {
 		Db := new(mocks.Db)
 		search := map[string]string{
 			"section_id": sectionID,
@@ -155,22 +155,16 @@ func TestSectionRepositoryImpl_Get(t *testing.T) {
 			"per_page": "10",
 		}
 
-		var expected []domain.Section
 		mockResult := func(args mock.Arguments) {
 			arg := args.Get(1).(*[]domain.Section)
 
-			if len(overrides) > 0 {
-				for _, override := range overrides {
-					override(args)
-				}
-			}
-
-			expected = *arg
+			_ = util.ReflectSlice(arg, results)
 		}
 
-		Db.On("Search", util.MergeMaps(search, pagination)).Return().Run(mockResult)
+		var res []domain.Section
+		Db.On("Search", util.MergeMaps(search, pagination), &res).Return().Run(mockResult)
 
-		return repository.NewSectionRepository(Db)
+		return repository.NewSectionRepository(Db), pagination
 	}
 
 	t.Run("should return a single section", func(t *testing.T) {
