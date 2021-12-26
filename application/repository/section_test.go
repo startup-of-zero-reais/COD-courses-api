@@ -6,6 +6,7 @@ import (
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
 	mocks "github.com/startup-of-zero-reais/COD-courses-api/mocks/domain"
 	"github.com/startup-of-zero-reais/COD-courses-api/tests/entity_mocks"
+	"github.com/startup-of-zero-reais/COD-courses-api/util"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -144,6 +145,33 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 }
 
 func TestSectionRepositoryImpl_Get(t *testing.T) {
+	preGetTest := func(sectionID string, overrides ...func(args mock.Arguments)) domain.SectionRepository {
+		Db := new(mocks.Db)
+		search := map[string]string{
+			"section_id": sectionID,
+		}
+		pagination := map[string]string{
+			"page":     "1",
+			"per_page": "10",
+		}
+
+		var expected []domain.Section
+		mockResult := func(args mock.Arguments) {
+			arg := args.Get(1).(*[]domain.Section)
+
+			if len(overrides) > 0 {
+				for _, override := range overrides {
+					override(args)
+				}
+			}
+
+			expected = *arg
+		}
+
+		Db.On("Search", util.MergeMaps(search, pagination)).Return().Run(mockResult)
+
+		return repository.NewSectionRepository(Db)
+	}
 
 	t.Run("should return a single section", func(t *testing.T) {
 
