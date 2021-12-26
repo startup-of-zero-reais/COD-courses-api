@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
+	"github.com/startup-of-zero-reais/COD-courses-api/util"
 )
 
 type (
@@ -42,7 +43,9 @@ func (s *SectionRepositoryImpl) Save(section domain.Section) (*domain.Section, e
 }
 
 func (s *SectionRepositoryImpl) Get(search map[string]string, pagination map[string]string) ([]domain.Section, error) {
-	return nil, nil
+	var result []domain.Section
+	s.Db.Search(util.MergeMaps(search, pagination), &result)
+	return result, nil
 }
 
 func (s *SectionRepositoryImpl) Delete(sectionID string) error {
