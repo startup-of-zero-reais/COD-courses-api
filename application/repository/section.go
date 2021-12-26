@@ -27,7 +27,9 @@ func (s *SectionRepositoryImpl) Create(section domain.Section) (*domain.Section,
 }
 
 func (s *SectionRepositoryImpl) Save(section domain.Section) (*domain.Section, error) {
-	return nil, nil
+	var result domain.Section
+	s.Db.Save(section, &result)
+	return &result, nil
 }
 
 func (s *SectionRepositoryImpl) Get(search map[string]string, pagination map[string]string) ([]domain.Section, error) {
