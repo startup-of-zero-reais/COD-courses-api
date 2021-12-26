@@ -6,6 +6,7 @@ import (
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
 	mocks "github.com/startup-of-zero-reais/COD-courses-api/mocks/domain"
 	"github.com/startup-of-zero-reais/COD-courses-api/tests/entity_mocks"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"testing"
@@ -90,8 +91,8 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 				}
 			}
 		}
-		var result domain.Section
 
+		var result domain.Section
 		Db.On("Save", *spy, &result).Return().Run(mockResult)
 
 		repo := repository.NewSectionRepository(Db)
@@ -101,18 +102,17 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 
 	t.Run("should save a section", func(t *testing.T) {
 		sectionSpy := entity_mocks.SectionMock()
-
-		require.Equal(t, sectionSpy.Label, "mock-label")
+		assert.Equal(t, sectionSpy.Label, "mock-label")
+		sectionSpy.Label = "updated-label"
 
 		repo := preSaveTest(sectionSpy)
-		sectionSpy.Label = "updated-label"
 
 		expected, err := repo.Save(*sectionSpy)
 
-		require.Nil(t, err)
-		require.NotNil(t, expected)
-		require.Equal(t, sectionSpy.SectionID, expected.SectionID)
-		require.Equal(t, "updated-label", expected.Label)
+		assert.Nil(t, err)
+		assert.NotNil(t, expected)
+		assert.Equal(t, sectionSpy.SectionID, expected.SectionID)
+		assert.Equal(t, "updated-label", expected.Label)
 	})
 	t.Run("should fail on save", func(t *testing.T) {
 
