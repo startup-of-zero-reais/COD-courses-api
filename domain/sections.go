@@ -11,8 +11,8 @@ type (
 		ModuleID  string `json:"module_id,omitempty" paginator:"skey:module_id" gorm:"type:varchar(36);column:module_id;"`
 		Label     string `json:"label,omitempty" paginator:"-" gorm:"column:label"`
 
-		Self     string `json:"_self,omitempty" paginator:"_self"`
-		Embedded string `json:"_embedded,omitempty" paginator:"_embedded"`
+		Self     string `json:"_self,omitempty" paginator:"_self" gorm:"-"`
+		Embedded string `json:"_embedded,omitempty" paginator:"_embedded" gorm:"-"`
 
 		Lessons []Lesson `json:"lessons,omitempty"`
 	}
