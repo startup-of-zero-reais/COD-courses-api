@@ -126,7 +126,7 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 
 		assert.Nil(t, expected)
 		assert.NotNil(t, err)
-		assert.EqualError(t, err, "erro ao salvar seção do banco")
+		assert.EqualError(t, err, "erro ao salvar uma seção inexistente")
 	})
 }
 
