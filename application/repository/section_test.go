@@ -132,8 +132,8 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 		sectionSpy := entity_mocks.SectionMock()
 		mockResult := func(args mock.Arguments) {
 			arg := args.Get(1).(*domain.Section)
-			arg.SectionID = "ok"
-			arg = nil
+			arg.SectionID = ""
+			arg = &domain.Section{}
 		}
 		repo := preSaveTest(sectionSpy, mockResult)
 
