@@ -114,8 +114,19 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 		assert.Equal(t, sectionSpy.SectionID, expected.SectionID)
 		assert.Equal(t, "updated-label", expected.Label)
 	})
-	t.Run("should fail on save", func(t *testing.T) {
+	t.Run("should fail on save if SectionID is empty", func(t *testing.T) {
+		sectionSpy := entity_mocks.SectionMock(map[string]interface{}{
+			// Deixa vazio a section_id
+			"section_id": "-",
+		})
 
+		repo := preSaveTest(sectionSpy)
+
+		expected, err := repo.Save(*sectionSpy)
+
+		assert.Nil(t, expected)
+		assert.NotNil(t, err)
+		assert.EqualError(t, err, "erro ao salvar seção do banco")
 	})
 }
 
