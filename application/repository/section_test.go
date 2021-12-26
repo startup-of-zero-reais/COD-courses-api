@@ -36,16 +36,16 @@ func TestSectionRepositoryImpl_Create(t *testing.T) {
 		Db := new(mocks.Db)
 		Db.On("Create", *result, &r).Return().Run(mockResult)
 
-		svc := repository.NewSectionRepository(Db)
+		repo := repository.NewSectionRepository(Db)
 
-		return svc
+		return repo
 	}
 
 	t.Run("should create a section", func(t *testing.T) {
 		sectionSpy := entity_mocks.SectionMock(map[string]interface{}{"section_id": "-"})
-		svc := preCreateTest(sectionSpy)
+		repo := preCreateTest(sectionSpy)
 
-		expected, err := svc.Create(*sectionSpy)
+		expected, err := repo.Create(*sectionSpy)
 
 		require.Nil(t, err)
 		require.Zero(t, sectionSpy.SectionID)
@@ -62,9 +62,9 @@ func TestSectionRepositoryImpl_Create(t *testing.T) {
 			arg = nil
 		}
 
-		svc := preCreateTest(sectionSpy, mockResult)
+		repo := preCreateTest(sectionSpy, mockResult)
 
-		expected, err := svc.Create(*sectionSpy)
+		expected, err := repo.Create(*sectionSpy)
 
 		require.Nil(t, expected)
 		require.NotNil(t, err)
