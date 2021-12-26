@@ -128,6 +128,19 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 		assert.NotNil(t, err)
 		assert.EqualError(t, err, "erro ao salvar uma seção inexistente")
 	})
+	t.Run("should fail if cannot save section", func(t *testing.T) {
+		sectionSpy := entity_mocks.SectionMock()
+		mockResult := func(args mock.Arguments) {
+			arg := args.Get(1).(*domain.Section)
+			arg.SectionID = "ok"
+			arg = nil
+		}
+		repo := preSaveTest(sectionSpy, mockResult)
+
+		expected, err := repo.Save(*sectionSpy)
+		assert.Nil(t, expected)
+		assert.EqualError(t, err, "ocorreu algum erro ao salvar seção")
+	})
 }
 
 func TestSectionRepositoryImpl_Get(t *testing.T) {
