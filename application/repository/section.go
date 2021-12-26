@@ -45,6 +45,11 @@ func (s *SectionRepositoryImpl) Save(section domain.Section) (*domain.Section, e
 func (s *SectionRepositoryImpl) Get(search map[string]string, pagination map[string]string) ([]domain.Section, error) {
 	var result []domain.Section
 	s.Db.Search(util.MergeMaps(search, pagination), &result)
+
+	if len(result) <= 0 || &result == nil {
+		return nil, errors.New("nenhuma seção encontrada")
+	}
+
 	return result, nil
 }
 
