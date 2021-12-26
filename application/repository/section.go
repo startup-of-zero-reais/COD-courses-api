@@ -33,7 +33,11 @@ func (s *SectionRepositoryImpl) Save(section domain.Section) (*domain.Section, e
 
 	var result domain.Section
 	s.Db.Save(section, &result)
-	
+
+	if result.SectionID == "" || &result == nil {
+		return nil, errors.New("ocorreu algum erro ao salvar seção")
+	}
+
 	return &result, nil
 }
 
