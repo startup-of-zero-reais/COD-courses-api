@@ -13,7 +13,10 @@ func NewSectionRepository(Db domain.Db) domain.SectionRepository {
 }
 
 func (s *SectionRepositoryImpl) Create(section domain.Section) (*domain.Section, error) {
-	return nil, nil
+	var result domain.Section
+	s.Db.Create(section, &result)
+
+	return &result, nil
 }
 
 func (s *SectionRepositoryImpl) Save(section domain.Section) (*domain.Section, error) {
