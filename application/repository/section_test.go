@@ -145,6 +145,12 @@ func TestSectionRepositoryImpl_Save(t *testing.T) {
 
 func TestSectionRepositoryImpl_Get(t *testing.T) {
 
+	t.Run("should return a single section", func(t *testing.T) {
+
+	})
+	t.Run("should fail if has no section", func(t *testing.T) {
+
+	})
 }
 
 func TestSectionRepositoryImpl_Delete(t *testing.T) {
