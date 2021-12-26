@@ -21,7 +21,7 @@ func SectionMock(overrides ...map[string]interface{}) *domain.Section {
 		for key, value := range override {
 			switch key {
 			case "section_id":
-				if key == "-" {
+				if value == "-" {
 					section.SectionID = ""
 				} else {
 					section.SectionID = value.(string)
