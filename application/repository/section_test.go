@@ -234,6 +234,9 @@ func TestSectionRepositoryImpl_Count(t *testing.T) {
 		assert.Equal(t, uint(expected), repo.Count())
 	})
 	t.Run("should return 0 if has no rows", func(t *testing.T) {
+		expected := 0
+		repo := preCount(expected)
 
+		assert.Equal(t, uint(expected), repo.Count())
 	})
 }
