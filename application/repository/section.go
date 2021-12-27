@@ -68,5 +68,5 @@ func (s *SectionRepositoryImpl) Delete(sectionID string) error {
 }
 
 func (s *SectionRepositoryImpl) Count() uint {
-	return uint(0)
+	return s.Db.TotalRows()
 }
