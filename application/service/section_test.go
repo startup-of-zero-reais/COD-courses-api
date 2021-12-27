@@ -1,6 +1,7 @@
 package service_test
 
 import (
+	"errors"
 	"github.com/google/uuid"
 	"github.com/startup-of-zero-reais/COD-courses-api/application/service"
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
@@ -76,7 +77,19 @@ func TestSectionServiceImpl_Add(t *testing.T) {
 		assert.NotZero(t, expected.SectionID)
 	})
 	t.Run("should fail on add a section", func(t *testing.T) {
+		sectionSpy := *entity_mocks.SectionMock()
 
+		ts.BeforeEach(sectionSpy)
+		defer ts.AfterEach()
+
+		ts.MockReturns(nil, errors.New("erro ao criar seção"))
+		svc := ts.getService()
+
+		expected, err := svc.Add(sectionSpy)
+
+		assert.Nil(t, expected)
+		assert.NotNil(t, err)
+		assert.EqualError(t, err, "erro ao criar seção")
 	})
 }
 
