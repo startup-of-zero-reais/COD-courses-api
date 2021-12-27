@@ -6,6 +6,12 @@ type SectionServiceImpl struct {
 	domain.SectionRepository
 }
 
+func NewSectionService(repo domain.SectionRepository) domain.SectionService {
+	return &SectionServiceImpl{
+		SectionRepository: repo,
+	}
+}
+
 func (s *SectionServiceImpl) Add(section domain.Section) (*domain.Section, error) {
 	return nil, nil
 }
