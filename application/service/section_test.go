@@ -144,7 +144,28 @@ func TestSectionServiceImpl_Get(t *testing.T) {
 		assert.EqualError(t, err, "nenhuma seção encontrada")
 	})
 	t.Run("should fail if has more than one section", func(t *testing.T) {
+		search := map[string]string{
+			"section_id": "section-id",
+		}
+		pagination := map[string]string{
+			"page":     "1",
+			"per_page": "1",
+		}
 
+		ts.BeforeEach(search, pagination)
+		defer ts.AfterEach()
+
+		ts.MockReturns([]domain.Section{
+			*entity_mocks.SectionMock(),
+			*entity_mocks.SectionMock(),
+		}, nil)
+
+		svc := ts.getService()
+
+		expected, err := svc.Get("section-id")
+
+		assert.Nil(t, expected)
+		assert.EqualError(t, err, "ocorreu um erro ao recuperar a seção. Contate o administrador do sistema")
 	})
 }
 
