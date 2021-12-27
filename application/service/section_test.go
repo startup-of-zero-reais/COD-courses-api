@@ -97,7 +97,31 @@ func TestSectionServiceImpl_Get(t *testing.T) {
 	ts := BeforeAllSection("Get")
 
 	t.Run("should get single section", func(t *testing.T) {
+		sectionSpy := []domain.Section{
+			*entity_mocks.SectionMock(map[string]interface{}{
+				"section_id": "section-id",
+			}),
+		}
+		search := map[string]string{
+			"section_id": "section-id",
+		}
+		pagination := map[string]string{
+			"page":     "1",
+			"per_page": "10",
+		}
 
+		ts.BeforeEach(search, pagination)
+		defer ts.AfterEach()
+
+		ts.MockReturns(sectionSpy, nil)
+
+		svc := ts.getService()
+
+		expected, err := svc.Get("section-id")
+
+		assert.Nil(t, err)
+		assert.NotNil(t, expected)
+		assert.Equal(t, expected.SectionID, "section-id")
 	})
 	t.Run("should fail if has no section", func(t *testing.T) {
 
