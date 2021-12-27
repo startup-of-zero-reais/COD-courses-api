@@ -1,6 +1,9 @@
 package service
 
-import "github.com/startup-of-zero-reais/COD-courses-api/domain"
+import (
+	"errors"
+	"github.com/startup-of-zero-reais/COD-courses-api/domain"
+)
 
 type SectionServiceImpl struct {
 	domain.SectionRepository
@@ -28,6 +31,14 @@ func (s *SectionServiceImpl) Get(sectionID string) (*domain.Section, error) {
 	sections, err := s.SectionRepository.Get(map[string]string{
 		"section_id": sectionID,
 	}, map[string]string{"page": "1", "per_page": "1"})
+
+	if len(sections) <= 0 {
+		return nil, errors.New("nenhuma seção encontrada")
+	}
+
+	if len(sections) > 1 {
+		return nil, errors.New("ocorreu um erro ao recuperar a seção. Contate o administrador do sistema")
+	}
 
 	return &(sections[0]), err
 }
