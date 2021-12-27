@@ -223,7 +223,7 @@ func TestSectionRepositoryImpl_Count(t *testing.T) {
 	preCount := func(num int) domain.SectionRepository {
 		Db := new(mocks.Db)
 
-		Db.On("Count").Return(uint(num))
+		Db.On("TotalRows").Return(uint(num))
 
 		return repository.NewSectionRepository(Db)
 	}
