@@ -1,6 +1,7 @@
 package service_test
 
 import (
+	"github.com/google/uuid"
 	"github.com/startup-of-zero-reais/COD-courses-api/application/service"
 	"github.com/startup-of-zero-reais/COD-courses-api/domain"
 	mocks "github.com/startup-of-zero-reais/COD-courses-api/mocks/domain"
@@ -57,7 +58,10 @@ func TestSectionServiceImpl_Add(t *testing.T) {
 	t.Run("should add a section", func(t *testing.T) {
 		sectionSpy := *entity_mocks.SectionMock(map[string]interface{}{
 			"section_id": "-",
+			"lessons":    []domain.Lesson{},
 		})
+		assert.Zero(t, sectionSpy.SectionID)
+		sectionSpy.SectionID = uuid.NewString()
 
 		ts.BeforeEach(sectionSpy)
 		defer ts.AfterEach()
@@ -69,6 +73,7 @@ func TestSectionServiceImpl_Add(t *testing.T) {
 
 		assert.Nil(t, err)
 		assert.NotNil(t, expected)
+		assert.NotZero(t, expected.SectionID)
 	})
 	t.Run("should fail on add a section", func(t *testing.T) {
 
