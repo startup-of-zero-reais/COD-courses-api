@@ -194,8 +194,13 @@ func TestSectionRepositoryImpl_Get(t *testing.T) {
 }
 
 func TestSectionRepositoryImpl_Delete(t *testing.T) {
-	preDeleteTest := func() domain.SectionRepository {
+	preDeleteTest := func(sectionID string, returns bool) domain.SectionRepository {
 		Db := new(mocks.Db)
+
+		Db.On("Delete", map[string]string{
+			"section_id": sectionID,
+		}, &domain.Section{}).Return(returns)
+
 		return repository.NewSectionRepository(Db)
 	}
 	t.Run("should delete a section", func(t *testing.T) {
