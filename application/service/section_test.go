@@ -32,6 +32,7 @@ func (t *TestSuit) BeforeEach(args ...interface{}) {
 
 func (t *TestSuit) AfterEach() {
 	t.Args = nil
+	t.Repo = new(mocks.SectionRepository)
 }
 
 func (t *TestSuit) MockReturns(returns ...interface{}) {
@@ -124,7 +125,23 @@ func TestSectionServiceImpl_Get(t *testing.T) {
 		assert.Equal(t, expected.SectionID, "section-id")
 	})
 	t.Run("should fail if has no section", func(t *testing.T) {
+		search := map[string]string{
+			"section_id": "section-id",
+		}
+		pagination := map[string]string{
+			"page":     "1",
+			"per_page": "1",
+		}
+		ts.BeforeEach(search, pagination)
+		defer ts.AfterEach()
 
+		ts.MockReturns(nil, errors.New("nenhuma seção encontrada"))
+
+		svc := ts.getService()
+
+		expected, err := svc.Get("section-id")
+		assert.Nil(t, expected)
+		assert.EqualError(t, err, "nenhuma seção encontrada")
 	})
 	t.Run("should fail if has more than one section", func(t *testing.T) {
 
