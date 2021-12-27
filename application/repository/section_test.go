@@ -204,7 +204,10 @@ func TestSectionRepositoryImpl_Delete(t *testing.T) {
 		return repository.NewSectionRepository(Db)
 	}
 	t.Run("should delete a section", func(t *testing.T) {
+		repo := preDeleteTest("section-id", true)
 
+		err := repo.Delete("section-id")
+		assert.Nil(t, err)
 	})
 	t.Run("should fail on try delete", func(t *testing.T) {
 
