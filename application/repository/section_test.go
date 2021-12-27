@@ -210,7 +210,12 @@ func TestSectionRepositoryImpl_Delete(t *testing.T) {
 		assert.Nil(t, err)
 	})
 	t.Run("should fail on try delete", func(t *testing.T) {
+		repo := preDeleteTest("section-id", false)
 
+		err := repo.Delete("section-id")
+
+		assert.NotNil(t, err)
+		assert.EqualError(t, err, "não foi possível deletar a seção")
 	})
 }
 
