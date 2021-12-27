@@ -228,7 +228,10 @@ func TestSectionRepositoryImpl_Count(t *testing.T) {
 		return repository.NewSectionRepository(Db)
 	}
 	t.Run("should count all db rows", func(t *testing.T) {
+		expected := 1500
+		repo := preCount(expected)
 
+		assert.Equal(t, uint(expected), repo.Count())
 	})
 	t.Run("should return 0 if has no rows", func(t *testing.T) {
 
