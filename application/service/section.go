@@ -25,7 +25,11 @@ func (s *SectionServiceImpl) ListByModule(moduleID string, pagination map[string
 }
 
 func (s *SectionServiceImpl) Get(sectionID string) (*domain.Section, error) {
-	return nil, nil
+	sections, err := s.SectionRepository.Get(map[string]string{
+		"section_id": sectionID,
+	}, map[string]string{"page": "1", "per_page": "1"})
+
+	return &(sections[0]), err
 }
 
 func (s *SectionServiceImpl) Delete(sectionID string) error {
