@@ -94,6 +94,8 @@ func TestSectionServiceImpl_Add(t *testing.T) {
 }
 
 func TestSectionServiceImpl_Get(t *testing.T) {
+	ts := BeforeAllSection("Get")
+
 	t.Run("should get single section", func(t *testing.T) {
 
 	})
