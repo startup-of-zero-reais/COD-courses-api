@@ -220,5 +220,17 @@ func TestSectionRepositoryImpl_Delete(t *testing.T) {
 }
 
 func TestSectionRepositoryImpl_Count(t *testing.T) {
+	preCount := func(num int) domain.SectionRepository {
+		Db := new(mocks.Db)
 
+		Db.On("Count").Return(uint(num))
+
+		return repository.NewSectionRepository(Db)
+	}
+	t.Run("should count all db rows", func(t *testing.T) {
+
+	})
+	t.Run("should return 0 if has no rows", func(t *testing.T) {
+
+	})
 }
