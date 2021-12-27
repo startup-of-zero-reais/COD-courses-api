@@ -13,7 +13,7 @@ func NewSectionService(repo domain.SectionRepository) domain.SectionService {
 }
 
 func (s *SectionServiceImpl) Add(section domain.Section) (*domain.Section, error) {
-	return nil, nil
+	return s.SectionRepository.Create(section)
 }
 
 func (s *SectionServiceImpl) Save(section domain.Section) (*domain.Section, error) {
