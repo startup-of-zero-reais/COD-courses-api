@@ -194,7 +194,16 @@ func TestSectionRepositoryImpl_Get(t *testing.T) {
 }
 
 func TestSectionRepositoryImpl_Delete(t *testing.T) {
+	preDeleteTest := func() domain.SectionRepository {
+		Db := new(mocks.Db)
+		return repository.NewSectionRepository(Db)
+	}
+	t.Run("should delete a section", func(t *testing.T) {
 
+	})
+	t.Run("should fail on try delete", func(t *testing.T) {
+
+	})
 }
 
 func TestSectionRepositoryImpl_Count(t *testing.T) {
