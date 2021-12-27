@@ -54,6 +54,16 @@ func (s *SectionRepositoryImpl) Get(search map[string]string, pagination map[str
 }
 
 func (s *SectionRepositoryImpl) Delete(sectionID string) error {
+	var result domain.Section
+
+	wasDeleted := s.Db.Delete(map[string]string{
+		"section_id": sectionID,
+	}, &result)
+
+	if !wasDeleted {
+		return errors.New("não foi possível deletar a seção")
+	}
+
 	return nil
 }
 
